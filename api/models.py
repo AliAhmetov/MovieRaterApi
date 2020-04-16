@@ -7,6 +7,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Movie(models.Model):
     title = models.CharField(max_length=36)
     description = models.TextField(max_length=300)
+    country = models.CharField(max_length=30, default='')
+    genre = models.TextField(max_length=300, default='')
+    year = models.IntegerField(null=True)
 
     def no_of_ratings(self):
         ratings = Rating.objects.filter(movie=self)
@@ -29,3 +32,16 @@ class Rating(models.Model):
     class Meta:
         unique_together = (('user', 'movie'))
         index_together = (('user', 'movie'))
+
+class Actor(models.Model):
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
+    movie = models.ManyToManyField(Movie, related_name='actors')
+
+class Producer(models.Model):
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
+    movie = models.ManyToManyField(Movie, related_name='producers')
+
+
+

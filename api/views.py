@@ -13,12 +13,18 @@ from rest_framework.response import Response
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     authentication_classes = (TokenAuthentication, ) #reading ur token from requst, coz django can't read it by himself
-    permission_classes = (AllowAny, ) #checking is user Authenticated
+    permission_classes = (IsAuthenticated, ) #checking is user Authenticated
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = MovieSerializer(instance)   serializer for mini movieserializer
+    #     return Response(serializer.data)
 
     @action(detail=True, methods=['POST'])
     def rate_movie(self, request, pk=None):
